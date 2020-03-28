@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provide/provide.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zhishinetflutter/provider/user_info_profider.dart';
+import 'package:zhishinetflutter/provider/current_index.dart';
 import 'package:zhishinetflutter/routers/application.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -179,8 +183,12 @@ class SettingsPage extends StatelessWidget {
                 minWidth: ScreenUtil().setWidth(750),
                 height: ScreenUtil().setWidth(120),
                 child: RaisedButton(
-                  onPressed: () {
-
+                  onPressed: () async {
+                    SharedPreferences pref = await SharedPreferences.getInstance();
+                    pref.remove('accessToken');
+                    Provide.value<UserInfoProvider>(context).clearAll();
+                    Provide.value<CurrentIndexProvider>(context).clearAll();
+                    Application.router.navigateTo(context, '/login');
                   },
                   child: const Text('退出登录', style: TextStyle(fontSize: 20)),
                   color: Colors.white,

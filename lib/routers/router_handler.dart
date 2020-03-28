@@ -4,6 +4,8 @@ import 'package:zhishinetflutter/pages/about_me/about_me.dart';
 import 'package:zhishinetflutter/pages/about_me/session_settings.dart';
 import 'package:zhishinetflutter/pages/about_me/settings.dart';
 import 'package:zhishinetflutter/pages/assessment/assessment_page.dart';
+import 'package:zhishinetflutter/pages/index_page.dart';
+import 'package:zhishinetflutter/pages/login/login_page.dart';
 
 Handler assessmentHandler = Handler(
   handlerFunc: (BuildContext context , Map<String, List<String>> params){
@@ -26,5 +28,17 @@ Handler settingsHandler = Handler(
 Handler sessionSettingsHandler = Handler(
     handlerFunc: (BuildContext context , Map<String, List<String>> params){
       return SessionSettingsPage();
+    }
+);
+
+Handler indexHandler = Handler(
+    handlerFunc: (BuildContext context , Map<String, List<String>> params){
+      return IndexPage();
+    }
+);
+
+Handler loginHandler = Handler(
+    handlerFunc: (BuildContext context , Map<String, List<String>> params){
+      return LoginPage();
     }
 );

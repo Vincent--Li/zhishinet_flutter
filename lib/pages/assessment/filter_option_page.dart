@@ -19,7 +19,6 @@ class FilterOptionPage extends StatelessWidget {
         int status = Provide.value<FilterOptionProvider>(context).status;
 
         return Container(
-          //TODO: 列表筛选项
           padding: EdgeInsets.only(left: ScreenUtil().setWidth(25), right: ScreenUtil().setWidth(25) ),
           height: ScreenUtil().setHeight(1000),
           child: Stack(
@@ -43,7 +42,7 @@ class FilterOptionPage extends StatelessWidget {
                         children: <Widget>[
                           RaisedButton(
                             onPressed: () {
-
+                              Navigator.pop(context);
                             },
                             child: const Text('取消', style: TextStyle(fontSize: 20)),
                             elevation: 0,
@@ -53,10 +52,11 @@ class FilterOptionPage extends StatelessWidget {
                             ),
                             color: Colors.white,
                           ),
-                          SizedBox(width: ScreenUtil().setWidth(20),),
+                          SizedBox(width: ScreenUtil().setWidth(80),),
                           RaisedButton(
                             onPressed: () {
-
+                              //TODO: 点击确定, 更新列表
+                              Navigator.pop(context);
                             },
                             child: const Text('确定', style: TextStyle(fontSize: 20, color: Colors.white)),
                             elevation: 0,

@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provide/provide.dart';
+import 'package:zhishinetflutter/model/user_info_model.dart';
 import 'package:zhishinetflutter/pages/about_me/about_me.dart';
 import 'package:zhishinetflutter/pages/assessment/assessment_page.dart';
 import 'package:zhishinetflutter/provider/current_index.dart';
+import 'package:zhishinetflutter/provider/user_info_profider.dart';
+import 'package:zhishinetflutter/service/service_method.dart';
 
 
 class IndexPage extends StatelessWidget {
@@ -28,11 +33,12 @@ class IndexPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334, );
 
-    return Provide<CurrentIndexProvide>(
-      builder: (context, chilid, val){
-        int currentIndex = Provide.value<CurrentIndexProvide>(context).currentIndex;
+    _getUserInfo(context);
+
+    return Provide<CurrentIndexProvider>(
+      builder: (context, child, val){
+        int currentIndex = Provide.value<CurrentIndexProvider>(context).currentIndex;
         return Scaffold(
           body: IndexedStack(
             index: currentIndex,
@@ -46,12 +52,19 @@ class IndexPage extends StatelessWidget {
               items: bottomTabs,
               currentIndex: currentIndex,
               onTap: (index){
-                Provide.value<CurrentIndexProvide>(context).changeIndex(index);
+                Provide.value<CurrentIndexProvider>(context).changeIndex(index);
               },
             ),
           ),
         );
       },
     );
+  }
+
+  void _getUserInfo(context) {
+    getRequest(context, 'users', "" ).then((val){
+      UserInfoModel userInfoModel = UserInfoModel.fromJson(json.decode(val.toString()));
+      Provide.value<UserInfoProvider>(context).updateUserInfo(userInfoModel);
+    });
   }
 }
