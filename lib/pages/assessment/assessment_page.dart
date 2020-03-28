@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zhishinetflutter/pages/assessment/filter_option_page.dart';
 import 'package:zhishinetflutter/pages/assessment/syn_page.dart';
 
 import 'mock_page.dart';
@@ -10,6 +11,7 @@ class AssessmentPage extends StatefulWidget {
 }
 
 class _AssessmentPageState extends State<AssessmentPage> with AutomaticKeepAliveClientMixin {
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -57,16 +59,29 @@ class _AssessmentPageState extends State<AssessmentPage> with AutomaticKeepAlive
 
               Expanded(
                 flex: 1,
-                child: Container(
-                  padding: EdgeInsets.only(left: ScreenUtil().setWidth(50)),
-                  child: FloatingActionButton(
-                    child: IconButton(icon: Icon(Icons.filter_list),),
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                ),
+                child: SizedBox(),
               ),
             ],
+          ),
+          actions: <Widget>[
+            Builder(
+              builder: (context){
+                return IconButton(
+                  icon: Icon(Icons.filter_list),
+                  color: Colors.black26,
+                  onPressed: (){
+                    print('test');
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                );
+              },
+            )
+          ],
+          centerTitle: true,
+        ),
+        endDrawer: Drawer(
+          child: Center(
+            child: FilterOptionPage(),
           ),
         ),
         body: TabBarView(
