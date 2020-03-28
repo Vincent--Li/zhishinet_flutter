@@ -4,6 +4,8 @@ import 'package:provide/provide.dart';
 import 'package:zhishinetflutter/pages/login/login_page.dart';
 import 'package:zhishinetflutter/provider/current_index.dart';
 import 'package:zhishinetflutter/provider/filter_option_provider.dart';
+import 'package:zhishinetflutter/provider/mock_page_provider.dart';
+import 'package:zhishinetflutter/provider/syn_page_provider.dart';
 import 'package:zhishinetflutter/provider/user_info_profider.dart';
 import 'package:zhishinetflutter/routers/application.dart';
 import 'package:zhishinetflutter/routers/routers.dart';
@@ -15,12 +17,15 @@ void main(){
   var currentIndexProvider = CurrentIndexProvider();
   var filterOptionProvider = FilterOptionProvider();
   var userInfoProvider = UserInfoProvider();
+  var synPageProvider = SynPageProvider();
+  var mockPageProvider = MockPageProvider();
 
-  //TODO: 添加provide监听
   var providers = Providers()
     ..provide(Provider<CurrentIndexProvider>.value(currentIndexProvider))
     ..provide(Provider<FilterOptionProvider>.value(filterOptionProvider))
-    ..provide(Provider<UserInfoProvider>.value(userInfoProvider));
+    ..provide(Provider<UserInfoProvider>.value(userInfoProvider))
+    ..provide(Provider<SynPageProvider>.value(synPageProvider))
+    ..provide(Provider<MockPageProvider>.value(mockPageProvider));
 
   runApp(ProviderNode(child: MyApp(), providers: providers,));
 }

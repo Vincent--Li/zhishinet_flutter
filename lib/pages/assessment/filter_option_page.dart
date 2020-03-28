@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
+import 'package:zhishinetflutter/model/suit_list_model.dart';
+import 'package:zhishinetflutter/model/user_info_model.dart';
 import 'package:zhishinetflutter/provider/filter_option_provider.dart';
+import 'package:zhishinetflutter/provider/syn_page_provider.dart';
+import 'package:zhishinetflutter/provider/user_info_profider.dart';
+import 'package:zhishinetflutter/service/service_method.dart';
 
 class FilterOptionPage extends StatelessWidget {
 
@@ -15,7 +22,7 @@ class FilterOptionPage extends StatelessWidget {
       builder: (context, child, val){
 
 
-        List<String> classNames =  Provide.value<FilterOptionProvider>(context).classNames;
+        List<ClassList> classList =  Provide.value<UserInfoProvider>(context).userInfoModel.classList;
         int status = Provide.value<FilterOptionProvider>(context).status;
 
         return Container(
@@ -27,7 +34,7 @@ class FilterOptionPage extends StatelessWidget {
                 children: <Widget>[
                   _statusGroup(context, status),
                   SizedBox(height: ScreenUtil().setHeight(40),),
-                  _sessiosGroup(context, classNames),
+                  _sessiosGroup(context, classList),
                   SizedBox(height: ScreenUtil().setHeight(40),),
                   _datePicker(context),
                 ],
@@ -48,7 +55,7 @@ class FilterOptionPage extends StatelessWidget {
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
-                                side: BorderSide(color: status == -1?Colors.lightBlueAccent:Colors.transparent)
+                                side: BorderSide(color: Colors.transparent)
                             ),
                             color: Colors.white,
                           ),
@@ -56,13 +63,13 @@ class FilterOptionPage extends StatelessWidget {
                           RaisedButton(
                             onPressed: () {
                               //TODO: 点击确定, 更新列表
-                              Navigator.pop(context);
+                              _getSTSList(context);
                             },
                             child: const Text('确定', style: TextStyle(fontSize: 20, color: Colors.white)),
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
-                                side: BorderSide(color: status == -1?Colors.lightBlueAccent:Colors.transparent)
+                                side: BorderSide(color: Colors.lightBlueAccent)
                             ),
                             color: Colors.lightBlueAccent,
                           ),
@@ -92,29 +99,12 @@ class FilterOptionPage extends StatelessWidget {
               elevation: 0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
-                  side: BorderSide(color: status == -1?Colors.lightBlueAccent:Colors.transparent)
-              ),
-              color: status == -1?Colors.white:Color(0x10000000),
-              child: Text("全部",
-                style: TextStyle(
-                  color: status == -1?Colors.lightBlueAccent:Colors.black45
-                ),
-              ),
-              onPressed: (){
-                Provide.value<FilterOptionProvider>(context).changeStatus(-1);
-              },
-            ),
-            SizedBox(width: ScreenUtil().setWidth(10),),
-            RaisedButton(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
                   side: BorderSide(color: status == 0?Colors.lightBlueAccent:Colors.transparent)
               ),
               color: status == 0?Colors.white:Color(0x10000000),
-              child: Text("未完成",
+              child: Text("全部",
                 style: TextStyle(
-                  color: status == 0?Colors.lightBlueAccent:Colors.black45
+                  color: status == -1?Colors.lightBlueAccent:Colors.black45
                 ),
               ),
               onPressed: (){
@@ -122,7 +112,6 @@ class FilterOptionPage extends StatelessWidget {
               },
             ),
             SizedBox(width: ScreenUtil().setWidth(10),),
-
             RaisedButton(
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -130,7 +119,7 @@ class FilterOptionPage extends StatelessWidget {
                   side: BorderSide(color: status == 1?Colors.lightBlueAccent:Colors.transparent)
               ),
               color: status == 1?Colors.white:Color(0x10000000),
-              child: Text("已完成",
+              child: Text("未完成",
                 style: TextStyle(
                   color: status == 1?Colors.lightBlueAccent:Colors.black45
                 ),
@@ -139,12 +128,30 @@ class FilterOptionPage extends StatelessWidget {
                 Provide.value<FilterOptionProvider>(context).changeStatus(1);
               },
             ),
+            SizedBox(width: ScreenUtil().setWidth(10),),
+
+            RaisedButton(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  side: BorderSide(color: status == 3?Colors.lightBlueAccent:Colors.transparent)
+              ),
+              color: status == 3?Colors.white:Color(0x10000000),
+              child: Text("已完成",
+                style: TextStyle(
+                  color: status == 3?Colors.lightBlueAccent:Colors.black45
+                ),
+              ),
+              onPressed: (){
+                Provide.value<FilterOptionProvider>(context).changeStatus(3);
+              },
+            ),
           ],
         )
       ],
     );
   }
-  Widget _sessiosGroup(context, classNames) {
+  Widget _sessiosGroup(context, List<ClassList> classList) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,9 +162,9 @@ class FilterOptionPage extends StatelessWidget {
           ),),
           ListView.builder(
             shrinkWrap: true,
-              itemCount: classNames.length,
+              itemCount: classList.length,
               itemBuilder:(context, index){
-                return  _classInkWell(context, classNames, index);
+                return  _classInkWell(context, classList, index);
               }),
         ],
       ),
@@ -207,7 +214,7 @@ class FilterOptionPage extends StatelessWidget {
     );
   }
 
-  Widget _classInkWell(context,  classNames, index){
+  Widget _classInkWell(context,  List<ClassList> classList, index){
 
     int classIndex = Provide.value<FilterOptionProvider>(context).classIndex;
 
@@ -218,7 +225,7 @@ class FilterOptionPage extends StatelessWidget {
           side: BorderSide(color: index == classIndex?Colors.lightBlueAccent:Colors.transparent)
       ),
       color: index == classIndex?Colors.white:Color(0x10000000),
-      child: Text(classNames[index],
+      child: Text(classList[index].className,
         textAlign: TextAlign.start,
         style: TextStyle(
             color: index == classIndex?Colors.lightBlueAccent:Colors.black45,
@@ -254,7 +261,6 @@ class FilterOptionPage extends StatelessWidget {
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedEndDate && picked.isAfter(selectedStartDate)){
-      print(picked);
       Provide.value<FilterOptionProvider>(context).changeSelectedEndDate(picked);
     }else{
       _showAlertDialog(context);
@@ -285,6 +291,47 @@ class FilterOptionPage extends StatelessWidget {
                 child: Text('确认')),
           ],
         ));
+  }
+
+  void _getSTSList(context) {
+    int syncPage = Provide.value<SynPageProvider>(context).syncPage;
+    int syncPageSize = Provide.value<SynPageProvider>(context).syncPageSize;
+
+
+    DateTime startDate = Provide.value<FilterOptionProvider>(context).selectedStartDate;
+    Provide.value<SynPageProvider>(context).changeSelectedStartDate(startDate);
+
+
+    DateTime endDate = Provide.value<FilterOptionProvider>(context).selectedEndDate;
+    Provide.value<SynPageProvider>(context).changeSelectedEndDate(endDate);
+
+    int status = Provide.value<FilterOptionProvider>(context).status;
+    Provide.value<SynPageProvider>(context).changeStatus(status);
+
+    UserInfoModel userInfoModel = Provide.value<UserInfoProvider>(context).userInfoModel;
+    int classIndex = Provide.value<FilterOptionProvider>(context).classIndex;
+
+    String paramUrl = '?assessmentType=1'
+        '&sessionId=${userInfoModel.classList[classIndex].globalSessionId}'
+        '&startDateBegin=${startDate.millisecondsSinceEpoch}'
+        '&startDateEnd=${endDate.millisecondsSinceEpoch}'
+        '&page=${syncPage}'
+        '&pageSize=${syncPageSize}';
+    if(status != 0){
+      paramUrl = paramUrl + '&statusId=${status}';
+    }
+
+    print("_getSTSList paramUrl is ===================== ${paramUrl}");
+
+    getRequest(context, 'suitList', paramUrl).then((val){
+      STSSuitListModel suitListModel = STSSuitListModel.fromJson(json.decode(val.toString()));
+      if(suitListModel.rows.length > 0){
+        Provide.value<SynPageProvider>(context).updateSyncSuitListModel(suitListModel);
+      }
+
+      Navigator.pop(context);
+
+    });
   }
 
 }

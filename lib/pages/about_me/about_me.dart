@@ -14,7 +14,7 @@ class AboutMePage extends StatelessWidget {
             height: ScreenUtil().setHeight(200),
             padding: EdgeInsets.fromLTRB(
                 ScreenUtil().setWidth(20),
-                ScreenUtil().setWidth(10),
+                ScreenUtil().setWidth(30),
                 ScreenUtil().setWidth(20),
                 ScreenUtil().setWidth(10)),
             child: Row(

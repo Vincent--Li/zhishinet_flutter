@@ -1,24 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zhishinetflutter/model/suit_list_model.dart';
 
-class FilterOptionProvider with ChangeNotifier{
+class MockPageProvider with ChangeNotifier{
+  STSSuitListModel mockSuitListModel;
+  int mockPage = 1;
+  int mockPageSize = 10;
+
+  DateTime selectedStartDate = DateTime.now();
+
+  DateTime selectedEndDate = DateTime.now().add(Duration(days: 1));
 
   int status = 0;
 
-  int classIndex = 0;
-
-  DateTime selectedStartDate = DateTime.now();
-  DateTime selectedEndDate = DateTime.now().add(Duration(days: 1));
-
-  changeStatus(int status){
-    this.status = status;
-    notifyListeners();
-  }
-
-  changeClassIndex(int classIndex){
-    this.classIndex = classIndex;
-    notifyListeners();
+  void updateMockSuitListModel(STSSuitListModel suitListModel) {
+    this.mockSuitListModel = suitListModel;
   }
 
   changeSelectedStartDate(DateTime selectedStartDate){
