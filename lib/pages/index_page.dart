@@ -37,9 +37,12 @@ class IndexPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    //TODO: 自动登录
     return FutureBuilder(
-      future: _getUserInfo(context),
+      future: Future.wait([
+        _getSynList(context),
+        _getMockList(context)
+      ]),
       builder: (context, snapshot){
         if(snapshot.hasData){
           return Provide<CurrentIndexProvider>(
@@ -72,18 +75,7 @@ class IndexPage extends StatelessWidget {
     );
   }
 
-  _getUserInfo(context) async{
-    getRequest(context, 'users', "" ).then((val){
-      UserInfoModel userInfoModel = UserInfoModel.fromJson(json.decode(val.toString()));
-      Provide.value<UserInfoProvider>(context).updateUserInfo(userInfoModel);
-
-      _getSynList(context);
-      _getMockList(context);
-    });
-    return '完成加载';
-  }
-
-  void _getSynList(context) async{
+  Future _getSynList(context) async{
     int syncPage = Provide.value<SynPageProvider>(context).syncPage;
     int syncPageSize = Provide.value<SynPageProvider>(context).syncPageSize;
     DateTime startDate = Provide.value<SynPageProvider>(context).selectedStartDate;
@@ -104,11 +96,11 @@ class IndexPage extends StatelessWidget {
     getRequest(context, 'suitList', paramUrl).then((val){
       STSSuitListModel suitListModel = STSSuitListModel.fromJson(json.decode(val.toString()));
       Provide.value<SynPageProvider>(context).updateSyncSuitListModel(suitListModel);
-
+      return suitListModel;
     });
   }
 
-  void _getMockList(context) async{
+  Future _getMockList(context) async{
     int mockPage = Provide.value<MockPageProvider>(context).mockPage;
     int mockPageSize = Provide.value<MockPageProvider>(context).mockPageSize;
     DateTime startDate = Provide.value<MockPageProvider>(context).selectedStartDate;
@@ -131,6 +123,8 @@ class IndexPage extends StatelessWidget {
     getRequest(context, 'suitList', paramUrl).then((val){
       STSSuitListModel suitListModel = STSSuitListModel.fromJson(json.decode(val.toString()));
       Provide.value<MockPageProvider>(context).updateMockSuitListModel(suitListModel);
+
+      return suitListModel;
     });
   }
 }

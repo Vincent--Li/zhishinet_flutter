@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provide/provide.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zhishinetflutter/config/service_url.dart';
+import 'package:zhishinetflutter/model/user_info_model.dart';
+import 'package:zhishinetflutter/provider/user_info_profider.dart';
 import 'package:zhishinetflutter/routers/application.dart';
 
 class AboutMePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    UserInfoModel userInfoModel = Provide.value<UserInfoProvider>(context).userInfoModel;
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -23,7 +30,7 @@ class AboutMePage extends StatelessWidget {
                   width: ScreenUtil().setWidth(220),
                   padding: EdgeInsets.only(left: 30, right: 20),
                   child: ClipOval(
-                    child: Image.network("https://resources.zhishinet.com/userdata/tenant/13/profile/19859_6f5a9ae0-189d-4e00-aa7b-407579d9703b.jpg"),
+                    child: Image.network(userInfoModel.avatar.toLowerCase().replaceFirst('~', cdnServiceUrl)),
                   ),
                 ),
                 Container(
@@ -33,7 +40,7 @@ class AboutMePage extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(height: ScreenUtil().setHeight(20),),
                       Text(
-                        "志远",
+                        userInfoModel.fullName,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: ScreenUtil().setSp(38),
@@ -42,7 +49,7 @@ class AboutMePage extends StatelessWidget {
                       ),
                       SizedBox(height: ScreenUtil().setHeight(15),),
                       Text(
-                        "芝士网皇家学院2015级 QA class",
+                        userInfoModel.classList[0].className,
                         style: TextStyle(
                             fontSize: ScreenUtil().setSp(30),
                             color: Colors.black54
@@ -50,7 +57,7 @@ class AboutMePage extends StatelessWidget {
                       ),
                       SizedBox(height: ScreenUtil().setHeight(15),),
                       Text(
-                        "您的会员将于 2100-01-01 到期",
+                        "您的会员将于 ${DateTime.fromMillisecondsSinceEpoch(userInfoModel.vipEndDate * 1000).year}-${DateTime.fromMillisecondsSinceEpoch(userInfoModel.vipEndDate * 1000).month}-${DateTime.fromMillisecondsSinceEpoch(userInfoModel.vipEndDate * 1000).day} 到期",
                         style: TextStyle(
                             fontSize: ScreenUtil().setSp(25),
                             color: Colors.black38

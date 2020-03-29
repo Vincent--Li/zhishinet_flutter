@@ -20,14 +20,18 @@ Future postRequest(context, configPath, {formData}) async{
       dio.options.headers['Authorization'] = '${accessTokenModel.tokenType} ${accessTokenModel.accessToken}';
     }
 
+    print("start POST =====${servicePath[configPath]}");
+
     if(formData == null){
       response = await dio.post(servicePath[configPath]);
     }else{
       response = await dio.post(servicePath[configPath], data: formData);
     }
     if(response.statusCode == 200){
+      print("end post ===== ${response.data}");
       return response.data;
     }else{
+      print("end post ===== failed");
       throw Exception("后端接口异常");
     }
   }catch(e){
@@ -47,11 +51,15 @@ Future getRequest(context, configPath, paramUrl) async{
       dio.options.headers['Authorization'] = '${accessTokenModel.tokenType} ${accessTokenModel.accessToken}';
     }
 
+    print("start GET =====${servicePath[configPath] + paramUrl}");
     response = await dio.get(servicePath[configPath] + paramUrl);
 
     if(response.statusCode == 200){
+      print("end get ===== ${response.data}");
       return response.data;
     }else{
+      print("end get ===== failed");
+
       throw Exception("后端接口异常");
     }
   }catch(e){

@@ -1,3 +1,4 @@
+const cdnServiceUrl = 'https://resources.zhishinet.com';
 const serviceUrl = 'https://www.zhishinet.com/api/';
 const stsServiceUrl = 'https://sts.zhishinet.com/api/';
 const servicePath = {
