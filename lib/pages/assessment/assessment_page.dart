@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 import 'package:zhishinetflutter/pages/assessment/filter_option_page.dart';
 import 'package:zhishinetflutter/pages/assessment/syn_page.dart';
+import 'package:zhishinetflutter/provider/assessment_page_provider.dart';
 import 'package:zhishinetflutter/provider/filter_option_provider.dart';
 
 import 'mock_page.dart';
@@ -87,11 +88,15 @@ class _AssessmentPageState extends State<AssessmentPage> with AutomaticKeepAlive
                 child: FilterOptionPage(),
               ),
             ),
-            body: TabBarView(
-              children: [
-                SynPage(),
-                MockPage(),
-              ],
+            body: Provide<AssessmentPageProvider>(
+              builder: (context, child, val){
+                return TabBarView(
+                  children: [
+                    SynPage(),
+                    MockPage(),
+                  ],
+                );
+              },
             ),
           ),
         );

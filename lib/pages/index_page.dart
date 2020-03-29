@@ -10,8 +10,7 @@ import 'package:zhishinetflutter/pages/about_me/about_me.dart';
 import 'package:zhishinetflutter/pages/assessment/assessment_page.dart';
 import 'package:zhishinetflutter/provider/current_index.dart';
 import 'package:zhishinetflutter/provider/filter_option_provider.dart';
-import 'package:zhishinetflutter/provider/mock_page_provider.dart';
-import 'package:zhishinetflutter/provider/syn_page_provider.dart';
+import 'package:zhishinetflutter/provider/assessment_page_provider.dart';
 import 'package:zhishinetflutter/provider/user_info_profider.dart';
 import 'package:zhishinetflutter/service/service_method.dart';
 
@@ -76,11 +75,11 @@ class IndexPage extends StatelessWidget {
   }
 
   Future _getSynList(context) async{
-    int syncPage = Provide.value<SynPageProvider>(context).syncPage;
-    int syncPageSize = Provide.value<SynPageProvider>(context).syncPageSize;
-    DateTime startDate = Provide.value<SynPageProvider>(context).selectedStartDate;
-    DateTime endDate = Provide.value<SynPageProvider>(context).selectedEndDate;
-    int status = Provide.value<SynPageProvider>(context).status;
+    int syncPage = Provide.value<AssessmentPageProvider>(context).syncPage;
+    int syncPageSize = Provide.value<AssessmentPageProvider>(context).syncPageSize;
+    DateTime startDate = Provide.value<AssessmentPageProvider>(context).selectedStartDate;
+    DateTime endDate = Provide.value<AssessmentPageProvider>(context).selectedEndDate;
+    int status = Provide.value<AssessmentPageProvider>(context).status;
     UserInfoModel userInfoModel = Provide.value<UserInfoProvider>(context).userInfoModel;
 
     String paramUrl = '?assessmentType=1'
@@ -95,17 +94,17 @@ class IndexPage extends StatelessWidget {
 
     getRequest(context, 'suitList', paramUrl).then((val){
       STSSuitListModel suitListModel = STSSuitListModel.fromJson(json.decode(val.toString()));
-      Provide.value<SynPageProvider>(context).updateSyncSuitListModel(suitListModel);
+      Provide.value<AssessmentPageProvider>(context).updateSyncSuitListModel(suitListModel);
       return suitListModel;
     });
   }
 
   Future _getMockList(context) async{
-    int mockPage = Provide.value<MockPageProvider>(context).mockPage;
-    int mockPageSize = Provide.value<MockPageProvider>(context).mockPageSize;
-    DateTime startDate = Provide.value<MockPageProvider>(context).selectedStartDate;
-    DateTime endDate = Provide.value<MockPageProvider>(context).selectedEndDate;
-    int status = Provide.value<MockPageProvider>(context).status;
+    int mockPage = Provide.value<AssessmentPageProvider>(context).mockPage;
+    int mockPageSize = Provide.value<AssessmentPageProvider>(context).mockPageSize;
+    DateTime startDate = Provide.value<AssessmentPageProvider>(context).selectedStartDate;
+    DateTime endDate = Provide.value<AssessmentPageProvider>(context).selectedEndDate;
+    int status = Provide.value<AssessmentPageProvider>(context).status;
     int classIndex = Provide.value<FilterOptionProvider>(context).classIndex;
 
     UserInfoModel userInfoModel = Provide.value<UserInfoProvider>(context).userInfoModel;
@@ -122,7 +121,7 @@ class IndexPage extends StatelessWidget {
 
     getRequest(context, 'suitList', paramUrl).then((val){
       STSSuitListModel suitListModel = STSSuitListModel.fromJson(json.decode(val.toString()));
-      Provide.value<MockPageProvider>(context).updateMockSuitListModel(suitListModel);
+      Provide.value<AssessmentPageProvider>(context).updateMockSuitListModel(suitListModel);
 
       return suitListModel;
     });

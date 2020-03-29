@@ -7,7 +7,7 @@ import 'package:provide/provide.dart';
 import 'package:zhishinetflutter/model/suit_list_model.dart';
 import 'package:zhishinetflutter/model/user_info_model.dart';
 import 'package:zhishinetflutter/provider/filter_option_provider.dart';
-import 'package:zhishinetflutter/provider/syn_page_provider.dart';
+import 'package:zhishinetflutter/provider/assessment_page_provider.dart';
 import 'package:zhishinetflutter/provider/user_info_profider.dart';
 import 'package:zhishinetflutter/service/service_method.dart';
 
@@ -294,43 +294,61 @@ class FilterOptionPage extends StatelessWidget {
   }
 
   void _getSTSList(context) {
-    int syncPage = Provide.value<SynPageProvider>(context).syncPage;
-    int syncPageSize = Provide.value<SynPageProvider>(context).syncPageSize;
+    //同步
+    Provide.value<AssessmentPageProvider>(context).changeSyncPage(1);
+    Provide.value<AssessmentPageProvider>(context).changeSyncPageSize(10);
 
+    //模拟
+    Provide.value<AssessmentPageProvider>(context).changeMockPage(1);
+    Provide.value<AssessmentPageProvider>(context).changeMockPageSize(10);
 
+    //共用部分更新
     DateTime startDate = Provide.value<FilterOptionProvider>(context).selectedStartDate;
-    Provide.value<SynPageProvider>(context).changeSelectedStartDate(startDate);
-
+    Provide.value<AssessmentPageProvider>(context).changeSelectedStartDate(startDate);
 
     DateTime endDate = Provide.value<FilterOptionProvider>(context).selectedEndDate;
-    Provide.value<SynPageProvider>(context).changeSelectedEndDate(endDate);
+    Provide.value<AssessmentPageProvider>(context).changeSelectedEndDate(endDate);
 
     int status = Provide.value<FilterOptionProvider>(context).status;
-    Provide.value<SynPageProvider>(context).changeStatus(status);
+    Provide.value<AssessmentPageProvider>(context).changeStatus(status);
 
     UserInfoModel userInfoModel = Provide.value<UserInfoProvider>(context).userInfoModel;
     int classIndex = Provide.value<FilterOptionProvider>(context).classIndex;
 
-    String paramUrl = '?assessmentType=1'
+
+    String syncParamUrl = '?assessmentType=1'
         '&sessionId=${userInfoModel.classList[classIndex].globalSessionId}'
         '&startDateBegin=${startDate.millisecondsSinceEpoch}'
         '&startDateEnd=${endDate.millisecondsSinceEpoch}'
-        '&page=${syncPage}'
-        '&pageSize=${syncPageSize}';
+        '&page=1'
+        '&pageSize=10';
+
+    String mockParamUrl = '?assessmentType=2'
+        '&sessionId=${userInfoModel.classList[classIndex].globalSessionId}'
+        '&startDateBegin=${startDate.millisecondsSinceEpoch}'
+        '&startDateEnd=${endDate.millisecondsSinceEpoch}'
+        '&page=1'
+        '&pageSize=10';
+
     if(status != 0){
-      paramUrl = paramUrl + '&statusId=${status}';
+      syncParamUrl = syncParamUrl + '&statusId=${status}';
+      mockParamUrl = mockParamUrl + '&statusId=${status}';
     }
 
-    print("_getSTSList paramUrl is ===================== ${paramUrl}");
+    print("_getSTSList syncParamUrl is ===================== ${syncParamUrl}");
+    print("_getSTSList mockParamUrl is ===================== ${mockParamUrl}");
 
-    getRequest(context, 'suitList', paramUrl).then((val){
-      STSSuitListModel suitListModel = STSSuitListModel.fromJson(json.decode(val.toString()));
-      if(suitListModel.rows.length > 0){
-        Provide.value<SynPageProvider>(context).updateSyncSuitListModel(suitListModel);
-      }
-
+    Future.wait([
+      getRequest(context, 'suitList', syncParamUrl).then((val){
+        STSSuitListModel suitListModel = STSSuitListModel.fromJson(json.decode(val.toString()));
+        Provide.value<AssessmentPageProvider>(context).updateSyncSuitListModel(suitListModel);
+      }),
+      getRequest(context, 'suitList', mockParamUrl).then((val){
+        STSSuitListModel suitListModel = STSSuitListModel.fromJson(json.decode(val.toString()));
+        Provide.value<AssessmentPageProvider>(context).updateMockSuitListModel(suitListModel);
+      })
+    ]).then((onValue){
       Navigator.pop(context);
-
     });
   }
 

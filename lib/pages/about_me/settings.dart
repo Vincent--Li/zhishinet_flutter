@@ -245,6 +245,7 @@ class SettingsPage extends StatelessWidget {
             FlatButton(
                 onPressed: (){
                   //TODO: 清除缓存
+                  _clearCache(context);
                   Navigator.pop(context);
                 },
                 child: Text('确认')
