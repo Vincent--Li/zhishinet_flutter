@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provide/provide.dart';
 import 'package:zhishinetflutter/pages/login/login_page.dart';
 import 'package:zhishinetflutter/provider/current_index.dart';
@@ -43,6 +44,16 @@ class MyApp extends StatelessWidget {
 
     return Container(
       child: MaterialApp(
+        localizationsDelegates: [
+          // ... app-specific localization delegate[s] here
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en'), // English
+          const Locale('zh'), // Chinese
+          // ... other locales the app supports
+        ],
         debugShowCheckedModeBanner: false,
         onGenerateRoute: Application.router.generator,
         home: SafeArea(
